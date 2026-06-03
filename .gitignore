@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Credentials — NEVER commit tokens
+.env
+*.token
+~/.iqm_token
+
+# Data (large files — use Git LFS or direct download)
+data/*.xlsx
+data/*.csv
+data/*.xls
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+
+# OS
+.DS_Store
+Thumbs.db

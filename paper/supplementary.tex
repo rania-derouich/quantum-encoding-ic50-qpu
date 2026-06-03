@@ -1,0 +1,241 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{listings}
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\title{\textbf{Supplementary Material}\\[6pt]
+Quantum Encoding Strategies for Drug Response Prediction:\\
+An Exhaustive Benchmark on a 20-Qubit Superconducting QPU}
+\author{Rania Derouich\\Independent Researcher, Tunisia}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Circuit Definitions}
+\label{sec:circuits}
+% ─────────────────────────────────────────────────────────────────────────────
+
+All circuits are implemented in Qrisp~0.8.2 using \texttt{QuantumVariable}
+objects. The shared variational ansatz appended to every encoding consists of
+$L=2$ layers, each comprising $R_y(\theta_{l,i,0})\,R_z(\theta_{l,i,1})$
+on every qubit followed by a nearest-neighbour CZ ladder.
+
+\subsection{Encoding 1: Angle RX}
+\begin{equation}
+  \mathcal{U}_1(x) = \bigotimes_{i=0}^{7} R_x(x_i)
+\end{equation}
+Simple single-rotation angle encoding. Low expressibility but hardware-efficient.
+
+\subsection{Encoding 2: Angle RY+RZ}
+\begin{equation}
+  \mathcal{U}_2(x) = \bigotimes_{i=0}^{7} R_y(x_i)\,R_z(x_{(i+4)\bmod 8})
+\end{equation}
+Two-rotation encoding using complementary feature pairs.
+
+\subsection{Encoding 3: Amplitude}
+Feature vector $x\in\mathbb{R}^8$ is zero-padded and $\ell_2$-normalised to
+$\tilde{x}\in\mathbb{R}^{16}$, then loaded as quantum state amplitudes on
+$n=4$ qubits:
+\begin{equation}
+  \mathcal{U}_3(x)\ket{0}^{\otimes 4} = \sum_{k=0}^{15}\tilde{x}_k\ket{k}.
+\end{equation}
+Implemented via \texttt{QuantumVariable.qs.init\_state()} in the Qrisp
+statevector simulator, compiled to the QPU backend.
+
+\subsection{Encoding 4: Basis}
+Feature vector is discretised to an integer index
+$m = \lfloor\sum_i x_i \cdot 2^{7-i}\rfloor \bmod 8$, then loaded as:
+\begin{equation}
+  \mathcal{U}_4(x)\ket{0}^{\otimes 3} = \ket{m}_\text{binary}.
+\end{equation}
+Only 3 qubits are used. Minimal depth; no continuous information preserved.
+
+\subsection{Encoding 5: ZZ Feature Map}
+Two Hadamard+phase layers with two-body interaction:
+\begin{equation}
+  \mathcal{U}_5(x) = \left[\prod_{i}\text{CZ}_{i,i+1}\,
+  e^{i x_i x_{i+1} Z_i}\,\prod_i P(x_i)\,\prod_i H_i\right]^2
+\end{equation}
+
+\subsection{Encoding 6: IQP}
+Instantaneous Quantum Polynomial encoding with diagonal gates:
+\begin{equation}
+  \mathcal{U}_6(x) = H^{\otimes n}\,
+  \prod_i R_z(x_i)\,\prod_{\text{even }i}\text{CZ}_{i,i+1}\,
+  R_z(x_i x_{i+1})\,H^{\otimes n}
+\end{equation}
+
+\subsection{Encoding 7: Hamiltonian (Trotterised)}
+Encodes data as Hamiltonian parameters:
+$H(x) = \sum_i x_i Z_i + \sum_i x_i x_{i+1} Z_i Z_{i+1}$,
+evolved via 2-step first-order Trotter:
+\begin{equation}
+  \mathcal{U}_7(x) = \left[e^{-i\sum_i x_i Z_i \frac{t}{2}}
+  \cdot e^{-i\sum_i x_i x_{i+1} Z_i Z_{i+1}\frac{t}{2}}\right]^2
+  \quad (t=1)
+\end{equation}
+Initial state: uniform superposition $\ket{+}^{\otimes 8}$.
+
+\subsection{Encoding 8: QAOA-inspired (Best performer)}
+Alternating cost and mixer layers:
+\begin{align}
+  \mathcal{U}_8(x) &= \prod_{l=1}^{L}
+  \underbrace{\bigotimes_i R_x(2\beta_l)}_{\text{mixer}}
+  \cdot
+  \underbrace{\text{CZ}_\text{ladder}\cdot\bigotimes_i R_z(2x_i)}_{\text{cost layer}}
+\end{align}
+Initial state $\ket{+}^{\otimes 8}$; mixer parameter $\beta_l$ is trainable.
+
+\subsection{Encoding 9: Squeezing (DV approximation)}
+\begin{equation}
+  \mathcal{U}_9(x) = \text{BS}\cdot\bigotimes_i R_z(x_i^2)\cdot\bigotimes_i R_x(x_i)
+\end{equation}
+where BS denotes beam-splitter-like operations:
+CZ$_{i,i+1}$, $R_y(\pi/4)_i$, $R_y(-\pi/4)_{i+1}$, CZ$_{i,i+1}$
+for even $i$.
+
+\subsection{Encoding 10: Hybrid (Angle + Amplitude)}
+Qubits 0–3: angle encoding ($R_x(x_i)$).
+Qubits 4–7: amplitude encoding of $x_{4:8}$, with inter-block CZ bridges.
+
+\subsection{Encoding 11: Displacement (CV-DV Bridge)}
+\begin{equation}
+  \mathcal{U}_{11}(x) = \bigotimes_i
+  R_y(2\alpha_i\sin\phi_i)\,R_x(2\alpha_i\cos\phi_i),
+  \quad \alpha_i=x_i,\ \phi_i=x_{(i+1)\bmod 8}
+\end{equation}
+
+\subsection{Encoding 12: Data Re-uploading}
+Data $x$ is re-injected at every variational layer $l$:
+\begin{equation}
+  \mathcal{U}_{12}(x) = \prod_{l=0}^{L}
+  \bigotimes_i R_z(x_{(i+l)\bmod 8})\,R_x(x_i)\cdot V_l(\theta_l)
+\end{equation}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{COBYLA Optimisation Details}
+\label{sec:cobyla}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\paragraph{Algorithm.} COBYLA (Constrained Optimisation By Linear Approximations)
+constructs a simplex of function evaluations and fits a linear model to
+estimate the gradient direction, without requiring analytical gradients.
+
+\paragraph{Configuration.}
+\begin{itemize}
+  \item Training subset: $n_\text{train} = 8$ QPU samples
+  \item Maximum function evaluations: 200
+  \item Initial trust-region radius: $\rho_0 = 0.5$
+  \item Objective: MSE on training subset
+  \item Initial weights: $\theta_0 \sim \mathcal{U}(-\pi, \pi)$
+\end{itemize}
+
+\paragraph{Result.}
+COBYLA reached maximum iterations without meeting the convergence criterion,
+with final training proxy MSE = 0.0954.  This indicates
+room for improvement with a larger budget or more training samples.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Dataset Details}
+\label{sec:dataset}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{GDSC2 Feature Engineering}
+The 8 selected features and their preprocessing:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Feature} & \textbf{Type} & \textbf{Preprocessing} \\
+\midrule
+AUC             & Continuous & Min-max $\to [-\pi,\pi]$ \\
+RMSE            & Continuous & Min-max $\to [-\pi,\pi]$ \\
+Z\_SCORE        & Continuous & Min-max $\to [-\pi,\pi]$ \\
+DRUG\_ID        & Integer    & Min-max $\to [-\pi,\pi]$ \\
+COSMIC\_ID      & Integer    & Min-max $\to [-\pi,\pi]$ \\
+cancer\_UNCLASSIFIED & Binary & $\{-\pi, \pi\}$ \\
+cancer\_LUAD    & Binary     & $\{-\pi, \pi\}$ \\
+cancer\_SCLC    & Binary     & $\{-\pi, \pi\}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All encodings use $[-\pi, \pi]$ via the \texttt{QuantumPreprocessor} default.
+The amplitude encoding normalises the feature vector to unit $\ell_2$ norm.
+
+\subsection{Stratified Sampling}
+50 samples were drawn using percentile-stratified sampling over LN-IC$_{50}$
+with 10 equally-spaced percentile bins (5 samples per bin), ensuring coverage
+of the full response range in the QPU subset.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Hardware Execution Log Summary}
+\label{sec:execution}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{center}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Encoding} & \textbf{Total time (s)} & \textbf{Avg/sample (s)} \\
+\midrule
+Angle RX             & 172.7 & 3.45 \\
+Angle RY+RZ          & 171.5 & 3.43 \\
+Amplitude            & 173.9 & 3.48 \\
+Basis                & 169.1 & 3.38 \\
+ZZ Feature Map       & 175.1 & 3.50 \\
+IQP                  & 173.5 & 3.47 \\
+Hamiltonian          & 174.0 & 3.48 \\
+QAOA-inspired        & 173.3 & 3.47 \\
+Squeezing            & 173.0 & 3.46 \\
+Hybrid               & 176.8 & 3.54 \\
+Displacement         & 172.2 & 3.44 \\
+Data Re-uploading    & 171.9 & 3.44 \\
+\midrule
+\textbf{Total}       & \textbf{2076.0} & \textbf{3.46 (mean)} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Total QPU wall time: $\approx 34.6$ minutes for all 600 circuit submissions
+(12 encodings $\times$ 50 samples).
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Additional Figures}
+\label{sec:figures}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/fig7_exec_time.png}
+\caption{QPU execution time per sample for each encoding.
+Mean latency: $3.47 \pm 0.09$\,s.}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/fig8_error_dist.png}
+\caption{Absolute error distribution per encoding. Solid lines: MAE;
+dashed lines: RMSE. Points are individual sample errors (with jitter).}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\linewidth]{figures/fig9_rank_heatmap.png}
+\caption{Metric rank heatmap (1 = best, 12 = worst) across RMSE, MAE,
+$-R^2$ and execution time. QAOA-inspired ranks first on RMSE and $-R^2$;
+Hamiltonian ranks first on MAE; Basis ranks first on execution time.}
+\end{figure}
+
+\end{document}

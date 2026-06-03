@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "author": "Rania Derouich",
+    "affiliation": "Independent Researcher, Tunisia",
+    "paper": "Quantum Encoding Strategies for Drug Response Prediction: An Exhaustive Benchmark on a 20-Qubit Superconducting QPU",
+    "dataset": "GDSC2 (release 8.5, Oct 2023)",
+    "backend": "IQM Garnet 20Q",
+    "n_qubits_max": 20,
+    "shots": 1024,
+    "n_samples": 50,
+    "n_features": 8,
+    "n_layers": 2,
+    "optimizer": "COBYLA",
+    "max_iter_cobyla": 200,
+    "sdk": "Qrisp 0.8.2",
+    "iqm_client": "33.0.5",
+    "ic50_range_full": [
+      -8.75,
+      13.82
+    ],
+    "ic50_range_qpu": [
+      -5.8,
+      6.35
+    ],
+    "timestamp": "2026-06-02T00:00:00Z"
+  },
+  "encodings": {
+    "QAOA-inspired": {
+      "n_qubits": 8,
+      "rmse": 3.3142,
+      "mae": 2.8694,
+      "r2": -0.3569,
+      "avg_time_s": 3.47,
+      "n_valid": 50,
+      "rank": 1
+    },
+    "Hamiltonian": {
+      "n_qubits": 8,
+      "rmse": 3.404,
+      "mae": 2.7538,
+      "r2": -0.4314,
+      "avg_time_s": 3.48,
+      "n_valid": 50,
+      "rank": 2
+    },
+    "Squeezing": {
+      "n_qubits": 8,
+      "rmse": 3.535,
+      "mae": 2.8255,
+      "r2": -0.5437,
+      "avg_time_s": 3.46,
+      "n_valid": 50,
+      "rank": 3
+    },
+    "Amplitude": {
+      "n_qubits": 4,
+      "rmse": 3.5431,
+      "mae": 3.1127,
+      "r2": -0.5508,
+      "avg_time_s": 3.48,
+      "n_valid": 50,
+      "rank": 4
+    },
+    "ZZ Feature Map": {
+      "n_qubits": 8,
+      "rmse": 3.5457,
+      "mae": 3.0091,
+      "r2": -0.5531,
+      "avg_time_s": 3.5,
+      "n_valid": 50,
+      "rank": 5
+    },
+    "Displacement": {
+      "n_qubits": 8,
+      "rmse": 3.6533,
+      "mae": 3.1108,
+      "r2": -0.6488,
+      "avg_time_s": 3.44,
+      "n_valid": 50,
+      "rank": 6
+    },
+    "Data Re-uploading": {
+      "n_qubits": 8,
+      "rmse": 3.7909,
+      "mae": 3.3322,
+      "r2": -0.7753,
+      "avg_time_s": 3.44,
+      "n_valid": 50,
+      "rank": 7
+    },
+    "Hybrid": {
+      "n_qubits": 8,
+      "rmse": 3.9184,
+      "mae": 3.4412,
+      "r2": -0.8967,
+      "avg_time_s": 3.54,
+      "n_valid": 50,
+      "rank": 8
+    },
+    "Angle RX": {
+      "n_qubits": 8,
+      "rmse": 4.5239,
+      "mae": 4.0375,
+      "r2": -1.5282,
+      "avg_time_s": 3.45,
+      "n_valid": 50,
+      "rank": 9
+    },
+    "Basis": {
+      "n_qubits": 3,
+      "rmse": 4.7934,
+      "mae": 3.809,
+      "r2": -1.8385,
+      "avg_time_s": 3.38,
+      "n_valid": 50,
+      "rank": 10
+    },
+    "Angle RY+RZ": {
+      "n_qubits": 8,
+      "rmse": 5.8943,
+      "mae": 5.103,
+      "r2": -3.292,
+      "avg_time_s": 3.43,
+      "n_valid": 50,
+      "rank": 11
+    },
+    "IQP": {
+      "n_qubits": 8,
+      "rmse": 6.2302,
+      "mae": 5.8783,
+      "r2": -3.7951,
+      "avg_time_s": 3.47,
+      "n_valid": 50,
+      "rank": 12
+    }
+  },
+  "statistical_tests": {
+    "method": "Wilcoxon signed-rank test (two-tailed)",
+    "alpha": 0.05,
+    "best_encoding": "QAOA-inspired",
+    "n_significant": 6,
+    "n_tested": 11,
+    "results": {
+      "Angle RX": {
+        "W": 65.5,
+        "p": 1e-09,
+        "significant": true
+      },
+      "Angle RY+RZ": {
+        "W": 110.0,
+        "p": 1e-09,
+        "significant": true
+      },
+      "IQP": {
+        "W": 34.0,
+        "p": 1e-09,
+        "significant": true
+      },
+      "Hybrid": {
+        "W": 256.5,
+        "p": 0.0002,
+        "significant": true
+      },
+      "Data Re-uploading": {
+        "W": 376.5,
+        "p": 0.0189,
+        "significant": true
+      },
+      "Basis": {
+        "W": 397.5,
+        "p": 0.0205,
+        "significant": true
+      },
+      "Displacement": {
+        "W": 514.0,
+        "p": 0.2332,
+        "significant": false
+      },
+      "Amplitude": {
+        "W": 486.5,
+        "p": 0.1449,
+        "significant": false
+      },
+      "Squeezing": {
+        "W": 590.5,
+        "p": 0.65,
+        "significant": false
+      },
+      "ZZ Feature Map": {
+        "W": 601.0,
+        "p": 0.7304,
+        "significant": false
+      },
+      "Hamiltonian": {
+        "W": 634.0,
+        "p": 0.9771,
+        "significant": false
+      }
+    }
+  }
+}
