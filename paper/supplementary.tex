@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \usepackage{listings}
+\usepackage{physics}
 \geometry{margin=2.5cm}
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 
@@ -135,7 +136,7 @@ estimate the gradient direction, without requiring analytical gradients.
 
 \paragraph{Configuration.}
 \begin{itemize}
-  \item Training subset: $n_\text{train} = 8$ QPU samples
+  \item Training set: all $n = 50$ samples (classical proxy, no QPU)
   \item Maximum function evaluations: 200
   \item Initial trust-region radius: $\rho_0 = 0.5$
   \item Objective: MSE on training subset
@@ -218,21 +219,21 @@ Total QPU wall time: $\approx 34.6$ minutes for all 600 circuit submissions
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{figures/fig7_exec_time.png}
+\includegraphics[width=0.95\linewidth]{fig7_exec_time.png}
 \caption{QPU execution time per sample for each encoding.
 Mean latency: $3.47 \pm 0.09$\,s.}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{figures/fig8_error_dist.png}
+\includegraphics[width=0.95\linewidth]{fig8_error_dist.png}
 \caption{Absolute error distribution per encoding. Solid lines: MAE;
 dashed lines: RMSE. Points are individual sample errors (with jitter).}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.75\linewidth]{figures/fig9_rank_heatmap.png}
+\includegraphics[width=0.75\linewidth]{fig9_rank_heatmap.png}
 \caption{Metric rank heatmap (1 = best, 12 = worst) across RMSE, MAE,
 $-R^2$ and execution time. QAOA-inspired ranks first on RMSE and $-R^2$;
 Hamiltonian ranks first on MAE; Basis ranks first on execution time.}

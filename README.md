@@ -116,7 +116,7 @@ CFG["use_real_qpu"] = True
 # Token entered via secure getpass prompt — never hardcoded
 ```
 
-> ⚠️ Full QPU benchmark consumes ~6,000 IQM Resonance credits  
+> ⚠️ Full QPU benchmark requires IQM Resonance credits  
 > (600 circuits × 1,024 shots, ~34.6 min wall time).
 
 ---
@@ -125,7 +125,7 @@ CFG["use_real_qpu"] = True
 
 Each encoding $\mathcal{U}_k(x)$ maps 8 molecular features into the quantum
 state, followed by 2 variational layers (RY+RZ rotations + CZ ladder),
-optimised with COBYLA (200 iterations, 8 training samples).
+optimised with COBYLA (200 iterations, classical proxy on all 50 samples).
 
 | # | Encoding | Key mechanism | Reference |
 |---|----------|---------------|-----------|
@@ -156,7 +156,7 @@ optimised with COBYLA (200 iterations, 8 training samples).
 | Avg. latency/sample | 3.47 ± 0.09 s |
 | Total QPU wall time | ~34.6 min (600 circuits) |
 | QPU credits | Provided free of charge by IQM Resonance (incl. 280 credits from the *Simulating Complex Materials with Quantum Chemistry and SQD* workshop) |
-| Optimiser | COBYLA (200 iters, 8 training samples) |
+| Optimiser | COBYLA (200 iters, classical proxy, all 50 samples) |
 
 ---
 

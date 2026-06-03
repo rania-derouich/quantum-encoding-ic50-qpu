@@ -378,17 +378,17 @@ representative qubits.
 Gradient computation via parameter-shift on a cloud QPU doubles circuit
 submissions per parameter, which is prohibitive at 1024~shots.
 We therefore used the \cobyla{} (Constrained Optimisation By Linear
-Approximations) gradient-free method~\cite{powell1994} with a training
-subset of 8~samples and 200~maximum evaluations.
+Approximations) gradient-free method~\cite{powell1994} with all 50~QPU
+samples and 200~maximum evaluations.
 Weights were optimised offline on a classical proxy circuit before QPU
 submission; the optimised weights were then used for the full 50-sample
 evaluation.
 
 \paragraph{COBYLA proxy loss.}
-The objective minimised was the mean squared error~(MSE) over the
-8-sample training subset:
+The objective minimised was the mean squared error~(MSE) over all
+50~samples on the classical proxy:
 \begin{equation}
-  \mathcal{L}(\theta) = \frac{1}{8}\sum_{j=1}^{8}
+  \mathcal{L}(\theta) = \frac{1}{50}\sum_{j=1}^{50}
   \bigl(\hat{y}_j(\theta) - y_j\bigr)^2,
 \end{equation}
 where $\hat{y}_j = \mathrm{scale}(\expvz_j)$ maps the classical proxy
