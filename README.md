@@ -3,7 +3,7 @@
 # ⚛️ Quantum Encoding Strategies for IC₅₀ Drug Response Prediction
 ### Exhaustive Benchmark on IQM Garnet 20-Qubit QPU
 
-[![arXiv](https://img.shields.io/badge/arXiv-coming%20soon-b31b1b?logo=arxiv)](https://arxiv.org)
+[![bioRxiv](https://img.shields.io/badge/bioRxiv-10.64898%2F2026.07.08.737310-bd2635?logo=biorxiv)](https://www.biorxiv.org/content/10.64898/2026.07.08.737310v1)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python)](https://python.org)
 [![Qrisp](https://img.shields.io/badge/Qrisp-0.8.2-orange)](https://qrisp.eu)
 [![IQM](https://img.shields.io/badge/IQM-Garnet%2020Q-blueviolet)](https://resonance.iqm.tech)
@@ -24,8 +24,8 @@ This repository contains the full reproducible pipeline for the paper:
 
 > **"Quantum Encoding Strategies for Drug Response Prediction:  
 > An Exhaustive Benchmark on a 20-Qubit Superconducting QPU"**  
-> Rania Derouich — Independent Researcher, Tunisia — 2026  
-> *arXiv preprint — ID to be updated after submission*
+> Rania Derouich, Nour El Houda Mathlouthi — GenoFlow Agency, Tunis, Tunisia — 2026  
+> *Posted on bioRxiv, July 13, 2026 — [doi.org/10.64898/2026.07.08.737310](https://doi.org/10.64898/2026.07.08.737310)*
 
 We benchmark **12 quantum data-encoding strategies** for regression of
 IC₅₀ drug response from the **GDSC2 dataset** (242,036 drug–cell-line pairs),
@@ -229,10 +229,11 @@ If you use this code or results, please cite:
 @article{derouich2026quantum,
   title   = {Quantum Encoding Strategies for Drug Response Prediction:
              An Exhaustive Benchmark on a 20-Qubit Superconducting QPU},
-  author  = {Derouich, Rania},
-  journal = {arXiv preprint},
+  author  = {Derouich, Rania and Mathlouthi, Nour El Houda},
+  journal = {bioRxiv},
   year    = {2026},
-  note    = {arXiv ID to be updated after submission}
+  doi     = {10.64898/2026.07.08.737310},
+  url     = {https://www.biorxiv.org/content/10.64898/2026.07.08.737310v1}
 }
 ```
 
