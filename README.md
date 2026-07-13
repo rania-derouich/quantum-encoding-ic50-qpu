@@ -237,8 +237,7 @@ If you use this code or results, please cite:
 }
 ```
 
-> 📌 The BibTeX `note` field will be updated to the arXiv ID once the preprint is live.  
-> You can watch this repository for the update.
+> 📌 Preprint posted July 13, 2026 on bioRxiv (Cold Spring Harbor Laboratory), available under a CC-BY 4.0 license.
 
 ---
 
