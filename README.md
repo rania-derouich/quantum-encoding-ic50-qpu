@@ -79,7 +79,7 @@ quantum-encoding-ic50-qpu/
 │   ├── fig9_rank_heatmap.png         # Multi-metric rank heatmap
 │   └── fig10_wilcoxon_detail.png     # Detailed Wilcoxon results
 ├── paper/
-│   ├── main.tex                      # LaTeX source (v4, arXiv-ready)
+│   ├── main.tex                       # LaTeX source (v4, bioRxiv-ready)
 │   └── supplementary.tex             # Supplementary material
 ├── requirements.txt
 ├── LICENSE                           # MIT
@@ -195,7 +195,7 @@ Wilcoxon signed-rank test comparing QAOA-inspired vs. all other encodings:
 ## 📄 Paper (LaTeX Source)
 
 The full manuscript LaTeX source is in [`paper/main.tex`](paper/main.tex)  
-(revtex4-2 format, arXiv-ready v4). Compile with:
+(revtex4-2 format, bioRxiv-ready v4). Compile with:
 
 ```bash
 cd paper
